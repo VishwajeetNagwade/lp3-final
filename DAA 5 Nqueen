@@ -1,0 +1,46 @@
+class NQueens:
+    def __init__(self):
+        self.size = int(input("Enter size of chessboard: "))
+        self.board = [[False] * self.size for _ in range(self.size)]
+        self.solutions = 0
+
+    def print_board(self):
+        for row in self.board:
+            print(" ".join("Q" if cell else "X" for cell in row))
+        print()
+
+    def is_safe(self, row, col):
+        for i in range(row):
+            if self.board[i][col] or \
+               (col - row + i >= 0 and self.board[i][col - row + i]) or \
+               (col + row - i < self.size and self.board[i][col + row - i]):
+                return False
+        return True
+
+    def solve(self, row=0):
+        if row == self.size:
+            self.solutions += 1
+            self.print_board()
+            return
+        if any(self.board[row]):
+            self.solve(row + 1)
+            return
+        for col in range(self.size):
+            if self.is_safe(row, col):
+                self.board[row][col] = True
+                self.solve(row + 1)
+                self.board[row][col] = False
+
+    def set_first_queen(self):
+        row = int(input(f"Enter row (1-{self.size}) for first queen: ")) - 1
+        col = int(input(f"Enter column (1-{self.size}) for first queen: ")) - 1
+        self.board[row][col] = True
+        self.print_board()
+
+    def display_message(self):
+        print("Solutions found." if self.solutions else "No solutions.")
+
+solver = NQueens()
+solver.set_first_queen()
+solver.solve()
+solver.display_message()
